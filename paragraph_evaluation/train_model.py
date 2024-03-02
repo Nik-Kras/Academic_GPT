@@ -98,7 +98,7 @@ def select_best_fit(model_fit) -> pd.Series:
     for key, eval_list in model_fit.iterrows():
         res[key] = str(eval_list.idxmin())
     res = pd.Series(res)
-    res.to_csv("paragraph_evaluation/data/FeatureModelBestFit.csv")
+    res.to_csv("paragraph_evaluation/data/FeatureModelBestFit.csv", header=False)
     print("Found the models that fit best for each feature separately and saved results in FeatureModelBestFit.csv")
     return res
 
