@@ -7,5 +7,5 @@ It is a Methodology that you could apply to your dataset by changing prompts and
 
 Demo:
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=YbZfIN8qLKc)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/YbZfIN8qLKc/0.jpg)](https://www.youtube.com/watch?v=YbZfIN8qLKc)
 
