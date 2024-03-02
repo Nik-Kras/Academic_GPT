@@ -4,8 +4,8 @@ from tqdm import tqdm
 from scipy.stats import gaussian_kde
 import json
 import pickle
-import training_dataset as td 
-from utils import model_ask
+import paragraph_evaluation.training_dataset as td 
+from paragraph_evaluation.utils import model_ask
 
 
 def call_all_models(paragraph) -> dict:

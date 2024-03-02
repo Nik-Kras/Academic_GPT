@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
 import json
-import training_dataset as td
-from parameters import FEATURE_MODEL_MAP, STATISTICAL_MODEL
-from utils import model_ask
+import paragraph_evaluation.training_dataset as td
+from paragraph_evaluation.parameters import FEATURE_MODEL_MAP, STATISTICAL_MODEL
+from paragraph_evaluation.utils import model_ask
 
 
 def get_metrics_from_mandatory_models(paragraph) -> dict:

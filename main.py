@@ -1,0 +1,6 @@
+from paragraph_evaluation.api import evaluate_paragraph
+
+if __name__ == "__main__":
+    paragraph = """Abstract: This paper examines popular model ToMnet developed by DeepMind and influenced the field of study of Machine Theory of Mind. While original ToMnet implementation is closed and its alternative ToMnet+ was developed in no longer actual framework - TensorFlow 1, the new model was proposed, developed and used for experiments: ToMnet-N (Theory of Mind Network by Nikita). This model solves a trajectory prediction problem for an observed player in the game in auto-regressive manner. The implementation is done in more modern TensorFlow 2. However, the most significant theoretical impact the paper makes is it argues with original ToMnet research. I claim that either ToMnet or any other network from the family: ToMnet+, ToM2c, Trait-ToM, ToMnet-G and others never achieved Theory of Mind and never will, as the implementation only considers pattern recognition which is only merely similar to Theory-Theory approach in Theory of Mind. I came up with this conclusion after repeating most of original experiments from ToMnet paper using my ToMnet-N model and my custom game and A* based bot player."""
+    evaluate_paragraph(paragraph)
+  
