@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+from paragraph_evaluation.utils import split_dataset_to_good_bad
 
 
 def visualise_one_model_all_features_distribution(df, model_ind):
@@ -9,13 +10,8 @@ def visualise_one_model_all_features_distribution(df, model_ind):
     model_name = f"model_{model_ind}"
     if model_name not in df.columns.levels[0]:
         print("Wrong model. Try one of: {}".format(df.columns.levels[0]))
-
-    bad_index = df["type"] == "bad"
-    bad_index = bad_index.squeeze()
-    good_index = df["type"] == "good"
-    good_index = good_index.squeeze()
-    bad_text = df[bad_index]
-    good_text = df[good_index]
+    
+    good_text, bad_text = split_dataset_to_good_bad(df)
 
     bad_model = bad_text[model_name]
     good_model = good_text[model_name]
@@ -56,12 +52,7 @@ def compare_models_on_feature(df, feature):
         print("Wrong feature. Try one of {}".format(set_of_features))
         return None
 
-    bad_index = df["type"] == "bad"
-    bad_index = bad_index.squeeze()
-    good_index = df["type"] == "good"
-    good_index = good_index.squeeze()
-    bad_text = df[bad_index]
-    good_text = df[good_index]
+    good_text, bad_text = split_dataset_to_good_bad(df)
 
     bad_model = bad_text.xs(feature, axis=1, level=1, drop_level=False)
     good_model = good_text.xs(feature, axis=1, level=1, drop_level=False)
@@ -124,12 +115,7 @@ def visualise_one_kde(good_values, bad_values, title):
 def visualise_all_kde(df, df_model_feature_fit):
     """ Draws KDEs for each feature usinng the models that describe the feature the best """
 
-    bad_index = df["type"] == "bad"
-    bad_index = bad_index.squeeze()
-    good_index = df["type"] == "good"
-    good_index = good_index.squeeze()
-    bad_text = df[bad_index]
-    good_text = df[good_index]
+    good_text, bad_text = split_dataset_to_good_bad(df)
 
     for feature, model in df_model_feature_fit.items():
         good_values = good_text[model][feature].to_list()

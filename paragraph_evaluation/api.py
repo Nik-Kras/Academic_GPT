@@ -4,6 +4,7 @@ import json
 import paragraph_evaluation.training_dataset as td
 from paragraph_evaluation.parameters import FEATURE_MODEL_MAP, STATISTICAL_MODEL
 from paragraph_evaluation.utils import model_ask
+from paragraph_evaluation.binary_classifier import predict
 
 
 def get_metrics_from_mandatory_models(paragraph) -> dict:
@@ -58,7 +59,7 @@ def get_feature_probabilities(feature_metrics) -> dict:
     return output
 
 
-def view_prediction_output(feature_metrics, feature_probabilities):
+def view_prediction_output(feature_metrics, feature_probabilities, label_prediction):
     """ Prints an output with hight interpretability """
     
     out = {}
@@ -68,8 +69,8 @@ def view_prediction_output(feature_metrics, feature_probabilities):
     print("How good each criteria is:")
     print(pd.Series(out))
 
-    average_good = np.mean([feature_probabilities[feature] for feature in feature_probabilities.keys()])
-    print("Average good probability: {:.1f}%".format(100*average_good))
+    label, prob = list(label_prediction.items())[0]
+    print("Overall Label prediction: {} - {:.1f}%".format(label, 100*prob))
 
 
 def evaluate_paragraph(paragraph: str) -> dict:
@@ -77,7 +78,8 @@ def evaluate_paragraph(paragraph: str) -> dict:
     all_models_metrics = get_metrics_from_mandatory_models(paragraph)
     feature_metrics = select_by_best_model_per_feature(all_models_metrics)
     feature_probabilities = get_feature_probabilities(feature_metrics)
-    view_prediction_output(feature_metrics, feature_probabilities)
+    label_prediction = predict(pd.Series(feature_metrics))
+    view_prediction_output(feature_metrics, feature_probabilities, label_prediction)
     return feature_probabilities
 
 

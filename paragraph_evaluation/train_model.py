@@ -5,7 +5,7 @@ from scipy.stats import gaussian_kde
 import json
 import pickle
 import paragraph_evaluation.training_dataset as td 
-from paragraph_evaluation.utils import model_ask
+from paragraph_evaluation.utils import model_ask, split_dataset_to_good_bad
 
 
 def call_all_models(paragraph) -> dict:
@@ -71,8 +71,7 @@ def evaluate_model_fit_per_feature(df) -> pd.DataFrame:
     model_names = sorted(list(set([c for c in set(df.columns.get_level_values(0)) if c.startswith("model")])))
 
     # Split dataset to evaluation of good paragraphs and bad paragraphs
-    bad_text = df[df["type"] == "bad"]
-    good_text = df[df["type"] == "good"]
+    good_text, bad_text = split_dataset_to_good_bad(df)
 
     evaluation = {}
     for feature in features:
@@ -107,8 +106,7 @@ def train_kde(dataset, feature_model_map):
     """ Saves KDE params for the dataset using given mapping feature <-> model """
     
     # Split dataset to evaluation of good paragraphs and bad paragraphs
-    bad_text = dataset[dataset["type"] == "bad"]
-    good_text = dataset[dataset["type"] == "good"]
+    good_text, bad_text = split_dataset_to_good_bad(dataset)
 
     # Get KDE params for good and bad distributions
     res = {}
