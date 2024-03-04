@@ -7,9 +7,6 @@ import pickle
 import pandas as pd
 
 
-MODEL_FILENAME = "data/binary_classifier.pickle"
-
-
 def create_dataset():
     """ Creates a dataset splitted to train and test sets """
     
@@ -50,14 +47,20 @@ def evaluate_classifier(train_y, train_x, test_y, test_x):
     
 
 def save_model(model):
-    pickle.dump(model, open(MODEL_FILENAME, "wb"))
+    import os
+    MODEL_FILENAME = "data/binary_classifier.pickle"
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    pickle.dump(model, open(os.path.join(current_dir, MODEL_FILENAME), "wb"))
     
     
 def load_model():
-    return pickle.load(open(MODEL_FILENAME, "rb"))
+    import os
+    MODEL_FILENAME = "data/binary_classifier.pickle"
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    return pickle.load(open(os.path.join(current_dir, MODEL_FILENAME), "rb"))
     
     
-def predict(paragraph_metrics) -> float:
+def predict(paragraph_metrics) -> dict:
     """ Returns probability of the paragraph to be good based on vectory of metrics """
     model = load_model()
     input_data = paragraph_metrics.to_frame().T # Convert pd.Series to one-row DataFrame

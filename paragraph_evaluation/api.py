@@ -7,7 +7,7 @@ from paragraph_evaluation.utils import model_ask
 from paragraph_evaluation.binary_classifier import predict
 
 
-def get_metrics_from_mandatory_models(paragraph) -> dict:
+def get_metrics_from_mandatory_models(paragraph, logs: bool = True) -> dict:
     """
     <PARAGRAPH> ->
     {"model_1": ..., "model_3": ...}
@@ -19,12 +19,13 @@ def get_metrics_from_mandatory_models(paragraph) -> dict:
     for ind in model_index:
         model_output[f"model_{ind}"] = json.loads(model_ask(paragraph, td.PROMPTS[ind]).content)
 
-    print("General evaluation by every model")
-    print(pd.DataFrame(model_output))
+    if logs:
+        print("General evaluation by every model")
+        print(pd.DataFrame(model_output))
     return model_output
 
 
-def select_by_best_model_per_feature(all_models_metrics) -> dict:
+def select_by_best_model_per_feature(all_models_metrics, logs: bool = True) -> dict:
     """
     {"model_1": {"feature_1": ..., ..., "feature_N": ...}, "model_3": ...} ->
     {"feature_1": ..., "feature_2": ...}
@@ -33,8 +34,9 @@ def select_by_best_model_per_feature(all_models_metrics) -> dict:
     for feature, model in FEATURE_MODEL_MAP.items():
         output[feature] = all_models_metrics[model][feature]
 
-    print("Left only values from most useful models")
-    print(pd.Series(output))
+    if logs:
+        print("Left only values from most useful models")
+        print(pd.Series(output))
     return output
 
 
@@ -73,14 +75,19 @@ def view_prediction_output(feature_metrics, feature_probabilities, label_predict
     print("Overall Label prediction: {} - {:.1f}%".format(label, 100*prob))
 
 
-def evaluate_paragraph(paragraph: str) -> dict:
+def evaluate_paragraph(paragraph: str, logs: bool = True) -> dict:
     """ Returns an evaluation of paragraph by criterias aka features """
-    all_models_metrics = get_metrics_from_mandatory_models(paragraph)
-    feature_metrics = select_by_best_model_per_feature(all_models_metrics)
+    all_models_metrics = get_metrics_from_mandatory_models(paragraph, logs)
+    feature_metrics = select_by_best_model_per_feature(all_models_metrics, logs)
     feature_probabilities = get_feature_probabilities(feature_metrics)
     label_prediction = predict(pd.Series(feature_metrics))
-    view_prediction_output(feature_metrics, feature_probabilities, label_prediction)
-    return feature_probabilities
+    
+    if logs:
+        view_prediction_output(feature_metrics, feature_probabilities, label_prediction)
+    
+    all_probs = feature_probabilities.copy()
+    all_probs.update({"classification": label_prediction})
+    return all_probs
 
 
 if __name__ == "__main__":
